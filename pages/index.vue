@@ -67,6 +67,10 @@
           Sign In
         </button>
       </div>
+
+      {{ $store.getters["auth/isLoggedIn"] }}
+
+      {{ $cookies.get('token').token }}
     </form>
   </div>
 </template>
@@ -94,7 +98,9 @@ export default {
         let response = await this.$axios.post('/register', this.form)
         let { token, user } = response.data
 
-        await this.$router.push('/dashboard')
+        await this.$store.dispatch('auth/save', { token, user })
+
+        //await this.$router.push('/dashboard')
       } catch (err) {
         if (err.response.data) {
           this.errors.save(err.response.data.errors)
@@ -125,7 +131,7 @@ input, strong {
   display: block;
 }
 
-button.button {
+.form .button {
   padding: 6px 12px;
   background: blue;
   color: white;
