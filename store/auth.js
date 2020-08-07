@@ -1,12 +1,10 @@
 export const state = () => ({
-  token: {},
+  token: null,
   user: {},
 })
 
 export const getters = {
-  isLoggedIn(state) {
-    return !!state.token.token && !!state.user
-  }
+  isLoggedIn: state => !!state.token && !!state.user,
 }
 
 export const mutations = {
@@ -23,17 +21,39 @@ export const actions = {
   /**
    * Handle save token in vuex and cookies.
    *
-   * @param object token
-   * @param object user
+   * @param object payload
    */
-  save({ commit }, { token, user }) {
+  save({ commit }, payload) {
+    let { token, user } = payload
     commit('SET_TOKEN', token)
     commit('SET_USER', user)
 
-    this.$cookies.set('token', JSON.stringify(token), {
+    this.$cookies.set('token', token.token, {
       path: '/',
       maxAge: token.expires_in,
-      httpOnly: true,
     })
+  },
+
+  /**
+   * Send attempt request.
+   *
+   * @return string token
+   */
+  async attempt({ commit }, token) {
+    commit('SET_TOKEN', token)
+
+    try {
+      let response = await this.$axios.get('/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      commit('SET_USER', response.data)
+    } catch (err) {
+      // If request failed, delete token and user
+      commit('SET_TOKEN', null)
+      commit('SET_USER', null)
+    }
   },
 }
