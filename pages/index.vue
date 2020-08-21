@@ -106,32 +106,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* Basic styling jsut for testing purposes */
-* {
-  margin: 0;
-  padding: 0;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-}
-
-input {
-  padding: 8px 12px;
-  border: 2px solid #ddd;
-  border-radius: .25rem;
-}
-
-input, strong {
-  display: block;
-}
-
-.form .button {
-  padding: 6px 12px;
-  background: blue;
-  color: white;
-  border-radius: .25rem;
-  cursor: pointer;
-}
-</style>
